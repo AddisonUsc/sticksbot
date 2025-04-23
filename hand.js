@@ -1,44 +1,56 @@
-let video, canvas, ctx, model;
 
-async function main() {
-  video = document.getElementById('video');
-  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-  video.srcObject = stream;
-  await new Promise(resolve => video.onloadedmetadata = resolve);
-  video.play();
+const videoElement = document.getElementById('video');
+const canvasElement = document.getElementById('output');
+const canvasCtx = canvasElement.getContext('2d');
 
-  canvas = document.getElementById('output');
-  ctx = canvas.getContext('2d');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+let hands;
+let camera;
 
-  model = await handpose.load(); // ← using basic handpose
-
-  detectHands();
+function startCamera() {
+  camera = new Camera(videoElement, {
+    onFrame: async () => {
+      await hands.send({image: videoElement});
+    },
+    width: 640,
+    height: 480
+  });
+  camera.start();
 }
 
-async function detectHands() {
-  async function frame() {
-    ctx.save();
-    ctx.scale(-1, 1);
-    ctx.drawImage(video, 0, 0, canvas.width * -1, canvas.height);
-    ctx.restore();
+function onResults(results) {
+  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-    const predictions = await model.estimateHands(video);
-    if (predictions.length > 0) {
-      if (typeof drawHandLandmarks === 'function') {
-        drawHandLandmarks(predictions);
-      }
-    }
+  // Draw mirrored video
+  canvasCtx.save();
+  canvasCtx.translate(canvasElement.width, 0);
+  canvasCtx.scale(-1, 1);
+  canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+  canvasCtx.restore();
 
-    requestAnimationFrame(frame);
+  if (results.multiHandLandmarks) {
+    results.multiHandLandmarks.forEach((landmarks, index) => {
+      drawHandLandmarks(canvasCtx, landmarks, canvasElement);
+    });
   }
-
-  frame();
 }
 
-navigator.getUserMedia = navigator.getUserMedia ||
-                         navigator.webkitGetUserMedia ||
-                         navigator.mozGetUserMedia;
+function setup() {
+  canvasElement.width = 640;
+  canvasElement.height = 480;
 
-main();
+  hands = new Hands({
+    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
+  });
+
+  hands.setOptions({
+    maxNumHands: 4,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.7,
+    minTrackingConfidence: 0.7,
+  });
+
+  hands.onResults(onResults);
+  startCamera();
+}
+
+setup();

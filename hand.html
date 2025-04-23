@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
-  
-  <!-- TensorFlow.js -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-  <!-- MediaPipe Hands through TensorFlow.js -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
-
-  <link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SticksBot</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <h1>SticksBot</h1>
   <div id="container">
-    <div id="header">
-      <h1 id="title">SticksBot</h1>
-    </div>
-    <div id="canvas-wrapper">
-      <canvas id="output"></canvas>
-      <video id="video" playsinline style="
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-        visibility: hidden;
-        position: absolute;
-      "></video>
-    </div>
+    <video id="video" autoplay playsinline style="display:none;"></video>
+    <canvas id="output"></canvas>
   </div>
 
-  <script src="hand.js"></script>
+  <div id="win-panel">
+    <p id="p2-wins" class="win-count">Player 2 Wins: 0</p>
+    <button id="toggle-wins" onclick="toggleWinDisplay()">Toggle Win Count</button>
+    <p id="p1-wins" class="win-count">Player 1 Wins: 0</p>
+  </div>
+
+  <!-- MediaPipe Hands & TFJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
   <script src="js/gameLogic.js"></script>
+  <script src="js/uiControls.js"></script>
+  <script src="hand.js"></script>
 </body>
 </html>

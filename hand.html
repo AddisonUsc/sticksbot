@@ -7,23 +7,48 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <h1>SticksBot</h1>
-  <div id="container">
-    <video id="video" autoplay playsinline style="display:none;"></video>
-    <canvas id="output"></canvas>
-  </div>
+  <header class="title-wrapper">
+    <div class="title-box">
+      <h1>SticksBot</h1>
+    </div>
+  </header>
 
-  <div id="win-panel">
-    <p id="p2-wins" class="win-count">Player 2 Wins: 0</p>
-    <button id="toggle-wins" onclick="toggleWinDisplay()">Toggle Win Count</button>
-    <p id="p1-wins" class="win-count">Player 1 Wins: 0</p>
-  </div>
+  <main id="main-wrapper">
+    <!-- LEFT = Player 1 -->
+    <div class="side-label left-label">
+      <p class="player-label">Player 1</p>
+      <button class="best-move-btn" onclick="getBestMove('P1')">Best Move (P1)</button>
+      <p id="p1-move" class="move-output"></p>
+    </div>
 
-  <!-- MediaPipe Hands & TFJS -->
+    <div id="camera-wrapper">
+      <canvas id="output"></canvas>
+      <div id="go-indicator">GO!</div>
+    </div>
+
+    <!-- RIGHT = Player 2 -->
+    <div class="side-label right-label">
+      <p class="player-label">Player 2</p>
+      <button class="best-move-btn" onclick="getBestMove('P2')">Best Move (P2)</button>
+      <p id="p2-move" class="move-output"></p>
+    </div>
+
+    <div id="control-panel">
+      <button id="start-btn" onclick="toggleRound()">Start Game</button>
+      <button id="toggle-wins" onclick="toggleWinDisplay()">Win Count</button>
+    </div>
+
+    <div id="win-panel">
+      <p id="p1-wins" class="win-count">Player 1 Wins: 0</p>
+      <p id="p2-wins" class="win-count">Player 2 Wins: 0</p>
+    </div>
+  </main>
+
+  <video id="video" autoplay playsinline></video>
+
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-
   <script src="js/gameLogic.js"></script>
   <script src="js/uiControls.js"></script>
   <script src="hand.js"></script>

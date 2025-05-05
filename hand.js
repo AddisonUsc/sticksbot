@@ -1,4 +1,3 @@
-
 const videoElement = document.getElementById('video');
 const canvasElement = document.getElementById('output');
 const canvasCtx = canvasElement.getContext('2d');
@@ -9,7 +8,7 @@ let camera;
 function startCamera() {
   camera = new Camera(videoElement, {
     onFrame: async () => {
-      await hands.send({image: videoElement});
+      await hands.send({ image: videoElement });
     },
     width: 640,
     height: 480
@@ -20,21 +19,36 @@ function startCamera() {
 function onResults(results) {
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-  // Draw mirrored video
-  canvasCtx.save();
-  canvasCtx.translate(canvasElement.width, 0);
-  canvasCtx.scale(-1, 1);
-  canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-  canvasCtx.restore();
-
-  if (results.multiHandLandmarks) {
-    results.multiHandLandmarks.forEach((landmarks, index) => {
-      drawHandLandmarks(canvasCtx, landmarks, canvasElement);
-    });
+  if (results.image) {
+    canvasCtx.save();
+    canvasCtx.scale(-1, 1);
+    canvasCtx.translate(-canvasElement.width, 0);
+    canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+    canvasCtx.restore();
   }
+
+  // Reset current hand data
+  window.currP1 = [];
+  window.currP2 = [];
+
+  if (!gameActive || !results.multiHandLandmarks) return;
+
+  results.multiHandLandmarks.forEach((landmarks) => {
+    drawHandLandmarks(canvasCtx, landmarks, canvasElement);
+  });
+
+  // Save snapshot of hand state AFTER drawing
+  window.lastHands = {
+    P1: [...(window.currP1 || [])],
+    P2: [...(window.currP2 || [])]
+  };
+
+  updateRoundState();
 }
 
 function setup() {
+  videoElement.width = 640;
+  videoElement.height = 480;
   canvasElement.width = 640;
   canvasElement.height = 480;
 

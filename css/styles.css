@@ -154,3 +154,18 @@ video#video {
   font-size: 18px;
   text-align: center;
 }
+
+#solo-toggle {
+  background-color: #222;
+  color: #0ff;
+  border: 1px solid #0ff;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+#solo-toggle:hover {
+  background-color: #0ff;
+  color: #111;
+}

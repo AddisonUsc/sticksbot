@@ -14,7 +14,6 @@
   </header>
 
   <main id="main-wrapper">
-    <!-- LEFT = Player 1 -->
     <div class="side-label left-label">
       <p class="player-label">Player 1</p>
       <button class="best-move-btn" onclick="getBestMove('P1')">Best Move (P1)</button>
@@ -26,7 +25,6 @@
       <div id="go-indicator">GO!</div>
     </div>
 
-    <!-- RIGHT = Player 2 -->
     <div class="side-label right-label">
       <p class="player-label">Player 2</p>
       <button class="best-move-btn" onclick="getBestMove('P2')">Best Move (P2)</button>
@@ -36,11 +34,14 @@
     <div id="control-panel">
       <button id="start-btn" onclick="toggleRound()">Start Game</button>
       <button id="toggle-wins" onclick="toggleWinDisplay()">Win Count</button>
+      <button id="solo-toggle" onclick="toggleSolo()">Solo Mode</button>
     </div>
 
     <div id="win-panel">
       <p id="p1-wins" class="win-count">Player 1 Wins: 0</p>
       <p id="p2-wins" class="win-count">Player 2 Wins: 0</p>
+    </div>
+
     </div>
   </main>
 
